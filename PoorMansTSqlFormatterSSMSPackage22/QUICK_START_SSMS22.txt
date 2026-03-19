@@ -1,0 +1,55 @@
+===========================================
+Poor Man's T-SQL Formatter for SSMS 22
+QUICK START GUIDE
+===========================================
+
+OPTION 1: If you have Visual Studio installed
+-----------------------------------------------
+1. Open "Developer Command Prompt for VS 2022" (or VS 2019)
+2. Navigate to the project directory
+3. Run: BUILD_SSMS22_SETUP.bat
+4. Navigate to: PoorMansTSqlFormatterSSMSPackage22.Setup\
+5. Right-click "INSTALL_SSMS22.bat" → Run as administrator
+6. Restart SSMS 22
+
+OPTION 2: If you have the extension already built
+--------------------------------------------------
+1. Copy extension files (*.dll, *.vsix, *.pkgdef) to:
+   PoorMansTSqlFormatterSSMSPackage22.Setup\
+2. Right-click "INSTALL_SSMS22.bat" → Run as administrator
+3. Restart SSMS 22
+
+TO UNINSTALL
+------------
+Method 1: Settings → Apps → Apps & Features → Find "Poor Man's T-SQL Formatter for SSMS 22" → Uninstall
+
+Method 2: Right-click "UNINSTALL_SSMS22.bat" → Run as administrator
+
+AFTER INSTALLATION
+------------------
+Look in SSMS 22 Tools menu for:
+  - Format T-SQL Code
+  - T-SQL Formatting Options
+
+Or use: Ctrl+K, Ctrl+F
+
+REQUIREMENTS
+------------
+- SQL Server Management Studio 22
+- Administrator privileges
+- .NET Framework 4.7.2+ (usually installed with SSMS)
+
+FILES CREATED
+-------------
+- PoorMansTSqlFormatterSSMSPackage22.Setup.action/  - Custom installer actions
+- PoorMansTSqlFormatterSSMSPackage22.Setup/         - Main setup files
+  - INSTALL_SSMS22.bat    - Installation script
+  - UNINSTALL_SSMS22.bat  - Uninstallation script
+  - README.txt           - Detailed instructions
+- BUILD_SSMS22_SETUP.bat                         - Build script
+- SSMS22_SETUP_SUMMARY.md                         - Technical documentation
+
+===========================================
+For detailed documentation, see: SSMS22_SETUP_SUMMARY.md
+For support, visit: https://github.com/TaoK/PoorMansTSqlFormatter
+===========================================

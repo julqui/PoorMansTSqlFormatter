@@ -1,0 +1,89 @@
+<!--
+Poor Man's T-SQL Formatter - a small free Transact-SQL formatting 
+library for .Net 2.0 and JS, written in C#. 
+Copyright (C) 2017-2019 Tao Klerks
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!--
+Updated to support SSMS 22 by Bob Chin @ CnSharp Studio, 6/10/2025
+-->
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:netfx="http://wixtoolset.org/schemas/v4/wxs/netfx"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package Name="Poor Man's T-Sql Formatter SSMS 22 Extension" Version="!(bind.FileVersion.PoorMansTSqlFormatterSSMSPackage22dll)" Manufacturer="CnSharp" UpgradeCode="54F7DFD6-E75F-4731-AB36-168E0DF4FF22" Language="1033" InstallerVersion="210">
+    <SummaryInformation Description="Poor Man's T-Sql Formatter SSMS Extension Installer - Version: !(bind.FileVersion.PoorMansTSqlFormatterSSMSPackage22dll)" />
+    
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="no" MigrateFeatures="no" />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="MainFeature" Title="Poor Man's T-SQL Formatter SSMS 22 Extension" Level="1" ConfigurableDirectory="SSMS22EXTENSIONSFOLDER" AllowAdvertise="no" InstallDefault="local" AllowAbsent="no">
+      <ComponentGroupRef Id="MainProductComponents" />
+    </Feature>
+
+    <Property Id="ApplicationFolderName" Value="PoorMansTSqlFormatter" />
+
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+
+    <!-- Simple UI: just directory selection -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <ui:WixUI Id="WixUI_InstallDir"/>
+
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)LICENSE.rtf" />
+
+    <!-- populated automatically by the "WixNetFxExtension" DLL reference -->
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_472_OR_LATER_INSTALLED" />
+    <Launch Condition="Installed OR WIX_IS_NETFRAMEWORK_472_OR_LATER_INSTALLED" Message="This setup requires the .NET Framework 4.7.2 installed." />
+
+    <SetProperty
+      Id="SSMS22EXTENSIONSFOLDER"
+      Value="[ProgramFiles64Folder]Microsoft SQL Server Management Studio 22\Release\Common7\IDE\Extensions\"
+      Before="CostFinalize"
+    />
+
+  </Package>
+
+  <Fragment> 
+    <Directory Id="SSMS22EXTENSIONSFOLDER">
+      <Directory Id="INSTALLFOLDER" Name="PoorMansTSqlFormatter">
+        <Directory Id="FRResourcesFolder" Name="fr" />
+        <Directory Id="ESResourcesFolder" Name="es" />
+      </Directory>
+    </Directory>
+  </Fragment> 
+
+  <Fragment>
+    <ComponentGroup Id="MainProductComponents">
+      <Component Id="MainFiles" Directory="INSTALLFOLDER" Guid="9909C7C1-3CD5-44D9-9595-3DA8BBEC6B22">
+        <File Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)PoorMansTSqlFormatterSSMSPackage.dll" Id="PoorMansTSqlFormatterSSMSPackage22dll" KeyPath="yes" />
+        <File Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)PoorMansTSqlFormatterSSMSPackage.pkgdef" Id="PoorMansTSqlFormatterSSMSPackage22pkgdef" />
+        <File Id="PoorMansTSqlFormatterSSMSLib.dll" Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)PoorMansTSqlFormatterSSMSLib.dll" />
+        <File Id="PoorMansTSqlFormatterPluginShared.dll" Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)PoorMansTSqlFormatterPluginShared.dll" />
+        <File Id="PoorMansTSqlFormatterLib.dll" Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)PoorMansTSqlFormatterLib.dll" />
+        <File Id="LICENSE.rtf" Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)LICENSE.rtf" />
+        <File Id="extension.vsixmanifest" Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)extension.vsixmanifest" />
+      </Component>
+      <Component Id="FRFiles" Directory="FRResourcesFolder" Guid="44B872FA-59F8-4931-904C-35F547567322">
+        <File Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)fr\PoorMansTSqlFormatterPluginShared.resources.dll" Id="PluginSharedResourcesFR" KeyPath="yes" />
+        <File Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)fr\PoorMansTSqlFormatterSSMSLib.resources.dll" Id="SSMSLibSharedResourcesFR" />
+      </Component>
+      <Component Id="ESFiles" Directory="ESResourcesFolder" Guid="73D99FFD-C403-4574-930B-913C69218D22">
+        <File Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)es\PoorMansTSqlFormatterPluginShared.resources.dll" Id="PluginSharedResourcesES" KeyPath="yes" />
+        <File Source="$(var.PoorMansTSqlFormatterSSMSPackage22.TargetDir)es\PoorMansTSqlFormatterSSMSLib.resources.dll" Id="SSMSLibSharedResourcesES" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>  
+</Wix>

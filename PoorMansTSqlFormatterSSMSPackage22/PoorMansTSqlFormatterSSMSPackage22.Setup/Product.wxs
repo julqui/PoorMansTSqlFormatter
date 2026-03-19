@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" 
+           Name="Poor Man's T-SQL Formatter for SSMS 22" 
+           Language="1033" 
+           Version="2.2.0.0" 
+           Manufacturer="Poor Man's T-SQL Formatter" 
+           UpgradeCode="E4536922-0831-D8FA-673B-223657C2C422">
+    
+    <Package InstallerVersion="200" 
+             Compressed="yes" 
+             InstallScope="perMachine" 
+             Platform="x86" 
+             Description="Poor Man's T-SQL Formatter Installer for SSMS 22" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="ProductFeature" Title="Poor Man's T-SQL Formatter for SSMS 22" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="SSMS22Files" />
+    </Feature>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="SSMS22Folder" Name="Microsoft SQL Server Management Studio 22">
+          <Directory Id="INSTALLFOLDER" Name="Release">
+            <Directory Id="IDEFolder" Name="Common7">
+              <Directory Id="ExtensionsFolder" Name="IDE">
+                <Directory Id="ExtensionsRootFolder" Name="Extensions">
+                  <Directory Id="PoorMansTSqlFormatterFolder" Name="PoorMansTSqlFormatter" />
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <ComponentGroup Id="ProductComponents" Directory="PoorMansTSqlFormatterFolder">
+      <!-- Components will be added here by heat or manually -->
+    </ComponentGroup>
+
+    <Binary Id="CustomActionDLL" SourceFile="$(var.PoorMansTSqlFormatterSSMSPackage22.Setup.action.TargetDir)PoorMansTSqlFormatterSSMSPackage22.Setup.action.CA.dll" />
+    
+    <CustomAction Id="PkgDefUpdateAction22" 
+                  BinaryKey="CustomActionDLL" 
+                  DllEntry="PkgDefUpdateAction22" 
+                  Execute="deferred" 
+                  Impersonate="no" />
+    
+    <CustomAction Id="SetPkgDefFilePath22" 
+                  Property="PkgDefUpdateAction22" 
+                  Value="[PoorMansTSqlFormatterFolder]PoorMansTSqlFormatterSSMSPackage22.pkgdef" />
+
+    <InstallExecuteSequence>
+      <Custom Action="SetPkgDefFilePath22" After="InstallFiles">NOT Installed</Custom>
+      <Custom Action="PkgDefUpdateAction22" After="SetPkgDefFilePath22">NOT Installed</Custom>
+    </InstallExecuteSequence>
+
+    <!-- Trigger extension refresh -->
+    <CustomAction Id="TriggerExtensionRefresh" 
+                  Directory="ExtensionsFolder" 
+                  ExeCommand='cmd /c echo. > "[ExtensionsFolder]extensions.configurationchanged"' 
+                  Execute="deferred" 
+                  Return="ignore" />
+
+    <InstallExecuteSequence>
+      <Custom Action="TriggerExtensionRefresh" After="InstallFinalize">NOT REMOVE</Custom>
+    </InstallExecuteSequence>
+  </Product>
+</Wix>
